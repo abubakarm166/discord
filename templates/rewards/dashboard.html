@@ -1,0 +1,275 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - KEYREWARDS{% endblock %}
+
+{% block content %}
+<!-- Top Navigation -->
+<nav class="container-fluid py-3" style="border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <div class="d-flex align-items-center gap-2">
+                <a href="{% url 'dashboard' %}" class="logo"><span style="font-size: xx-large;">K</span>EY<span style="font-size: xx-large;">R</span>EWARDS</a>
+                <div class="key-badge">
+                    <i class="bi bi-key-fill"></i>
+                    <span id="key-balance">{{ user.key_balance }}</span> Keys
+                </div>
+            </div>
+            <div class="d-flex align-items-center gap-4 flex-wrap">
+                <div class="d-flex align-items-center gap-2">
+                    {% if user.avatar %}
+                        <img src="{{ user.avatar }}" alt="{{ user.username }}" class="rounded-circle" style="width: 40px; height: 40px; border: 2px solid var(--orange);">
+                    {% else %}
+                        <div class="rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background-color: var(--orange); color: white; font-weight: bold;">
+                            {{ user.username|first|upper }}
+                        </div>
+                    {% endif %}
+                    <span class="text-white">{{ user.username }}</span>
+                </div>
+                <a href="{% url 'logout' %}" class="text-decoration-none d-flex align-items-center gap-2" style="color: var(--text-light);">
+                    <i class="bi bi-box-arrow-right"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container py-5">
+    <!-- How to Earn Keys Section -->
+    <section class="mb-5 how-to-earn-keys">
+        <h1 class="fw-bold mb-4 text-center" style="color: var(--text-white);">How to earn keys</h1>
+        <div class="row g-4 mt-5">
+            <div class="col-md-4">
+                <div class="card-dark p-4 h-100 position-relative" style="border: 1px solid rgba(255, 255, 255, 0.1); background-color: #0A0A0A">
+                    <div class="step-number">01</div>
+                    <div class="position-relative" style="z-index: 1;">
+                        <div class="step-icon-box">
+                            <i class="bi bi-chat-dots-fill"></i>
+                        </div>
+                        <div style="margin-top: 100px;">
+                            <p class="mb-0" style="color: var(--text-white);">Participate in community discussions and chat actively</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-dark p-4 h-100 position-relative" style="border: 1px solid rgba(255, 255, 255, 0.1); background-color: #0A0A0A">
+                    <div class="step-number">02</div>
+                    <div class="position-relative" style="z-index: 1;">
+                        <div class="step-icon-box">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+                        <div style="margin-top: 100px;">
+                            <p class="mb-0" style="color: var(--text-white);">Invite friends to join the Discord community</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card-dark p-4 h-100 position-relative" style="border: 1px solid rgba(255, 255, 255, 0.1); background-color: #0A0A0A">
+                    <div class="step-number">03</div>
+                    <div class="position-relative" style="z-index: 1;">
+                        <div class="step-icon-box">
+                            <i class="bi bi-trophy-fill"></i>
+                        </div>
+                        <div style="margin-top: 100px;">
+                            <p class="mb-0" style="color: var(--text-white);">Complete special challenges and community events</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Available Rewards Section -->
+    <section>
+        <h2 class="fw-bold mb-2">Available Rewards</h2>
+        <p class=" mb-4">Redeem your keys for exclusive rewards</p>
+        
+        {% if rewards %}
+            <div class="row g-4">
+                {% for reward in rewards %}
+                    <div class="col-md-6 col-lg-4">
+                        <div class="reward-card">
+                            {% if reward.image %}
+                                <img src="{{ reward.image.url }}" class="reward-image" alt="{{ reward.name }}">
+                            {% else %}
+                                <div class="reward-placeholder">
+                                    <i class="bi bi-gift-fill" style="font-size: 3rem;"></i>
+                                </div>
+                            {% endif %}
+                            <div class="p-4">
+                                <h5 class="fw-bold mb-2">{{ reward.name }}</h5>
+                                <p class=" mb-3">
+                                    <i class="bi bi-key-fill me-1" style="color: var(--orange);"></i>
+                                    <strong>{{ reward.key_cost }}</strong> Keys
+                                </p>
+                                <button 
+                                    class="btn btn-orange w-100 redeem-btn" 
+                                    data-reward-id="{{ reward.id }}"
+                                    data-reward-cost="{{ reward.key_cost }}"
+                                    {% if reward.id in redeemed_reward_ids %}disabled{% elif user.key_balance < reward.key_cost %}disabled{% endif %}>
+                                    {% if reward.id in redeemed_reward_ids %}
+                                        Already Redeemed
+                                    {% elif user.key_balance < reward.key_cost %}
+                                        Not enough keys
+                                    {% else %}
+                                        Redeem
+                                    {% endif %}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="card-dark p-5 text-center">
+                <i class="bi bi-inbox" style="font-size: 3rem; color: #666;"></i>
+                <p class="text-muted mt-3 mb-0">No rewards available at the moment.</p>
+            </div>
+        {% endif %}
+    </section>
+</div>
+
+<!-- Footer -->
+<footer class="container-fluid py-4 mt-5" style="border-top: 1px solid rgba(255, 255, 255, 0.1);">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <a href="{% url 'landing' %}" class="logo"><span style="font-size: xx-large;">K</span>EY<span style="font-size: xx-large;">R</span>EWARDS</a>
+
+            <div class="d-flex gap-4 mt-2 mt-md-0">
+                <a href="#" class="text-decoration-none" style="color: var(--text-light);">Discord Server</a>
+                <a href="#" class="text-decoration-none" style="color: var(--text-light);">Terms of Service</a>
+                <a href="#" class="text-decoration-none" style="color: var(--text-light);">Privacy Policy</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- Success Modal -->
+<div class="modal fade" id="successModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content card-dark">
+            <div class="modal-header border-0">
+                <h5 class="modal-title text-white">Success!</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-white" id="success-message"></p>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-orange" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Error Modal -->
+<div class="modal fade" id="errorModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content card-dark">
+            <div class="modal-header border-0">
+                <h5 class="modal-title text-white">Error</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p class="text-white" id="error-message"></p>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-orange" data-bs-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const redeemButtons = document.querySelectorAll('.redeem-btn');
+    
+    redeemButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const rewardId = this.dataset.rewardId;
+            const rewardCost = parseInt(this.dataset.rewardCost);
+            const originalText = this.innerHTML;
+            const card = this.closest('.reward-card');
+            
+            // Disable button and show loading
+            this.disabled = true;
+            this.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Processing...';
+            
+            // Make API call
+            fetch(`/api/redeem/${rewardId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': getCookie('csrftoken'),
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Update balance
+                    const balanceElement = document.getElementById('key-balance');
+                    balanceElement.textContent = data.new_balance;
+                    
+                    // Show success modal
+                    document.getElementById('success-message').textContent = data.message;
+                    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                    successModal.show();
+                    
+                    // Mark this reward as redeemed
+                    this.disabled = true;
+                    this.textContent = 'Already Redeemed';
+                    
+                    // Update all buttons based on new balance
+                    redeemButtons.forEach(btn => {
+                        const cost = parseInt(btn.dataset.rewardCost);
+                        if (data.new_balance < cost && !btn.disabled && btn.textContent !== 'Already Redeemed') {
+                            btn.disabled = true;
+                            btn.textContent = 'Not enough keys';
+                        }
+                    });
+                } else {
+                    // Show error modal
+                    document.getElementById('error-message').textContent = data.error || 'Redemption failed. Please try again.';
+                    const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+                    errorModal.show();
+                    
+                    // Re-enable button
+                    this.disabled = false;
+                    this.innerHTML = originalText;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('error-message').textContent = 'An error occurred. Please try again.';
+                const errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+                errorModal.show();
+                
+                // Re-enable button
+                this.disabled = false;
+                this.innerHTML = originalText;
+            });
+        });
+    });
+});
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %}

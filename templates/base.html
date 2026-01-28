@@ -1,0 +1,210 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}KEYREWARDS - Discord Community Rewards{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        @font-face {
+            font-family: 'Carrois Gothic SC';
+            src: url('{% static "font/CarroisGothicSC-Regular.ttf" %}') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        @font-face {
+            font-family: 'Plus Jakarta Sans';
+            src: url('{% static "font/PlusJakartaSans-Regular.ttf" %}') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+        }
+        
+        @font-face {
+            font-family: 'Plus Jakarta Sans';
+            src: url('{% static "font/PlusJakartaSans-Medium.ttf" %}') format('truetype');
+            font-weight: 500;
+            font-style: normal;
+        }
+        
+        @font-face {
+            font-family: 'Plus Jakarta Sans';
+            src: url('{% static "font/PlusJakartaSans-SemiBold.ttf" %}') format('truetype');
+            font-weight: 600;
+            font-style: normal;
+        }
+        
+        @font-face {
+            font-family: 'Plus Jakarta Sans';
+            src: url('{% static "font/PlusJakartaSans-Bold.ttf" %}') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+        }
+        
+        :root {
+            --orange: #FF6B35;
+            --orange-dark: #E55A2B;
+            --dark-bg: #0A0A0A;
+            --dark-card: #1A1A1A;
+            --text-white: #FFFFFF;
+            --text-light: #CCCCCC;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #0B0B0B;
+            color: var(--text-white);
+            font-family: 'Plus Jakarta Sans';
+            min-height: 100vh;
+        }
+        
+        .logo {
+            font-family: 'Carrois Gothic SC', sans-serif;
+            color: var(--orange);
+            font-weight: normal;
+            font-size: 1.5rem;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 10px rgba(255, 107, 53, 0.5), 0 0 20px rgba(255, 107, 53, 0.3);
+            transition: text-shadow 0.3s;
+        }
+        
+        .logo:hover {
+            text-shadow: 0 0 15px rgba(255, 107, 53, 0.7), 0 0 30px rgba(255, 107, 53, 0.4);
+            color: var(--orange);
+        }
+        
+        .btn-orange {
+            background-color: var(--orange);
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .btn-orange:hover {
+            background-color: var(--orange-dark);
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .btn-orange:disabled {
+            background-color: #666;
+            color: #999;
+            cursor: not-allowed;
+        }
+        
+        .key-badge {
+            background-color:#341709;
+            border: 2px solid var(--orange);
+            color: white;
+            padding: 0.25rem 1rem;
+            border-radius: 50px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .card-dark {
+            background-color: black;
+            border: none;
+            border-radius: 12px;
+            color: var(--text-white);
+            overflow: hidden;
+        }
+        
+        .step-number {
+            position: absolute;
+            font-size: 8rem;
+            font-weight: 900;
+            color: rgba(255, 107, 53, 0.15);
+            top: 10px;
+            right: -27px;
+            line-height: 1;
+            z-index: 0;
+        }
+        
+        .step-icon-box {
+            width: 64px;
+            height: 64px;
+            background-color: #FF6B3512;
+            border: 1px solid #FF6B354D;
+            color: var(--orange);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .step-icon-box i {
+            color: var(--orange);
+            font-size: 2rem;
+        }
+        
+        .reward-card {
+            background-color: var(--dark-card);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .reward-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--orange);
+        }
+        
+        .reward-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .reward-placeholder {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #2A2A2A 0%, #1A1A1A 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+        }
+        .how-to-earn-keys{
+            background-color: black;
+            padding: 50px 50px;
+            border-radius: 12px;
+            /* border: 1px solid rgba(255, 255, 255, 0.1); */
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    {% if messages %}
+        <div class="position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index: 9999;">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert" style="min-width: 300px;">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

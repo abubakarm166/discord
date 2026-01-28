@@ -1,0 +1,323 @@
+================================================================================
+COMPLETE TESTING GUIDE - Discord Rewards Platform
+================================================================================
+
+This guide will help you test the entire project step by step, even if you're
+new to Discord development.
+
+================================================================================
+PART 1: DISCORD SETUP (For Beginners)
+================================================================================
+
+STEP 1: Create/Login to Discord Account
+----------------------------------------
+- If you don't have Discord, go to https://discord.com and create a free account
+- You'll need this account to test the login feature
+
+STEP 2: Access Discord Developer Portal
+----------------------------------------
+1. Go to: https://discord.com/developers/applications
+2. Login with your Discord account
+3. You should see your "GamingApp" application (or create a new one if needed)
+
+STEP 3: Get Your Client Secret (IMPORTANT!)
+--------------------------------------------
+1. In the Discord Developer Portal, click on "GamingApp" (or your app name)
+2. Look at the LEFT SIDEBAR - you'll see different sections
+3. Click on "OAuth2" (NOT "General Information")
+4. In the OAuth2 page, you'll see:
+   - "Client Information" section at the top
+   - "Client Secret" field (it might be hidden)
+   - If you see "Reset Secret" button, click it to reveal the secret
+   - COPY the Client Secret (it's a long string of characters)
+   - ⚠️ Keep this secret safe - don't share it publicly!
+
+STEP 4: Add Redirect URI
+-------------------------
+1. Still in the OAuth2 section, scroll down to "Redirects"
+2. Click "Add Redirect"
+3. Enter exactly: http://localhost:8000/auth/discord/callback/
+4. Click "Save Changes"
+
+STEP 5: Verify Scopes
+---------------------
+1. In the OAuth2 section, look for "Scopes"
+2. Make sure "identify" is checked (it should be by default)
+3. This allows the app to get your Discord username and avatar
+
+================================================================================
+PART 2: PROJECT SETUP
+================================================================================
+
+STEP 1: Create .env File
+-------------------------
+1. In the project root folder (D:\discord), create a new file named ".env"
+   (Note: The file name starts with a dot, no extension)
+   
+2. Copy and paste this content into the .env file:
+
+   SECRET_KEY=zizz=4^a&h$t6%y88-)ii@=m+br#k#8so%i+6s@0vi^o93qa6e
+   DEBUG=True
+   DISCORD_CLIENT_ID=1464199776823279636
+   DISCORD_CLIENT_SECRET=PASTE_YOUR_CLIENT_SECRET_HERE
+   DISCORD_REDIRECT_URI=http://localhost:8000/auth/discord/callback/
+
+3. Replace "PASTE_YOUR_CLIENT_SECRET_HERE" with the Client Secret you copied
+   from Discord Developer Portal (Step 3 above)
+
+4. Save the file
+
+STEP 2: Activate Virtual Environment (if needed)
+------------------------------------------------
+If you see a folder named "evn" in your project, activate it:
+
+Windows PowerShell:
+   .\evn\Scripts\Activate.ps1
+
+Windows Command Prompt:
+   .\evn\Scripts\activate.bat
+
+STEP 3: Install Dependencies
+-----------------------------
+Run this command:
+   pip install -r requirements.txt
+
+STEP 4: Run Database Migrations
+--------------------------------
+Run these commands one by one:
+   python manage.py makemigrations
+   python manage.py migrate
+
+STEP 5: Create Admin User
+--------------------------
+Run this command:
+   python manage.py createsuperuser
+
+When prompted:
+   - Enter a username (e.g., "admin")
+   - Enter an email (optional, press Enter to skip)
+   - Enter a password (remember this - you'll need it for admin panel)
+
+STEP 6: Start the Server
+-------------------------
+Run this command:
+   python manage.py runserver
+
+You should see:
+   "Starting development server at http://127.0.0.1:8000/"
+
+Keep this terminal window open!
+
+================================================================================
+PART 3: TESTING THE APPLICATION
+================================================================================
+
+TEST 1: Access Landing Page
+----------------------------
+1. Open your web browser
+2. Go to: http://localhost:8000
+3. You should see a page with:
+   - A trophy icon
+   - "Discord Rewards" heading
+   - "Login with Discord" button
+4. ✅ If you see this, the server is working!
+
+TEST 2: Test Discord Login
+---------------------------
+1. Click the "Login with Discord" button
+2. You should be redirected to Discord's authorization page
+3. You'll see:
+   - Discord logo
+   - "GamingApp wants to access your account"
+   - What permissions it's requesting (just "identify")
+4. Click "Authorize"
+5. You should be redirected back to your website
+6. ✅ If you see a dashboard with your Discord username and avatar, login works!
+
+TEST 3: Check Dashboard
+-----------------------
+After logging in, you should see:
+- Your Discord avatar (or a placeholder)
+- Your Discord username
+- Your key balance (should be 0 initially)
+- A "Logout" button
+- A section showing "Available Rewards" (empty if no rewards added yet)
+7. ✅ If you see all these, the dashboard is working!
+
+TEST 4: Add Rewards (Admin Panel)
+-----------------------------------
+1. Open a NEW browser tab
+2. Go to: http://localhost:8000/admin
+3. Login with the admin username and password you created
+4. You should see Django admin panel with:
+   - Users
+   - Rewards
+   - Redemption logs
+5. Click on "Rewards"
+6. Click "Add Reward" (top right)
+7. Fill in:
+   - Name: "Test Reward 1"
+   - Key cost: 10
+   - Is active: ✓ (checked)
+   - Image: (optional - you can upload an image)
+8. Click "Save"
+9. ✅ If the reward appears in the list, admin panel works!
+
+TEST 5: Add Keys to Your User Account
+--------------------------------------
+1. Still in admin panel, click "Users"
+2. Find your Discord username in the list
+3. Click on it to edit
+4. Change "Key balance" from 0 to 50 (or any number)
+5. Click "Save"
+6. ✅ Keys added successfully!
+
+TEST 6: Test Reward Redemption
+------------------------------
+1. Go back to your dashboard tab (http://localhost:8000/dashboard)
+2. Refresh the page (F5)
+3. You should now see:
+   - Your updated key balance (50 keys)
+   - The "Test Reward 1" reward card
+   - A "Redeem" button
+4. Click the "Redeem" button
+5. You should see:
+   - A success message popup
+   - Your key balance decreased by 10 (now 40)
+   - The "Redeem" button might be disabled if you don't have enough keys
+6. ✅ If redemption works, the core feature is complete!
+
+TEST 7: Check Redemption Logs
+------------------------------
+1. Go back to admin panel: http://localhost:8000/admin
+2. Click "Redemption logs"
+3. You should see:
+   - Your username
+   - "Test Reward 1"
+   - The timestamp of when you redeemed it
+4. ✅ If you see this, logging works!
+
+TEST 8: Test Logout
+--------------------
+1. On your dashboard, click "Logout"
+2. You should be redirected to the landing page
+3. ✅ If you see the login page again, logout works!
+
+TEST 9: Test Multiple Redemptions
+----------------------------------
+1. Login again with Discord
+2. Add more keys via admin panel if needed
+3. Try redeeming multiple rewards
+4. Check that:
+   - Keys are deducted correctly
+   - Balance never goes negative
+   - All redemptions are logged
+5. ✅ If all works, the system is functioning correctly!
+
+================================================================================
+PART 4: TROUBLESHOOTING
+================================================================================
+
+PROBLEM: "Discord OAuth not configured" error
+----------------------------------------------
+SOLUTION:
+- Check that .env file exists in project root
+- Check that DISCORD_CLIENT_ID and DISCORD_CLIENT_SECRET are set
+- Make sure there are no extra spaces in .env file
+- Restart the server after creating/editing .env
+
+PROBLEM: "Invalid redirect URI" error from Discord
+----------------------------------------------------
+SOLUTION:
+- Go to Discord Developer Portal > OAuth2 > Redirects
+- Make sure http://localhost:8000/auth/discord/callback/ is added
+- Check for typos (no trailing spaces, correct URL format)
+- Save changes in Discord portal
+
+PROBLEM: Can't login to admin panel
+-----------------------------------
+SOLUTION:
+- Make sure you created superuser: python manage.py createsuperuser
+- Check username/password are correct
+- Try creating a new superuser if needed
+
+PROBLEM: Server won't start
+---------------------------
+SOLUTION:
+- Check if port 8000 is already in use
+- Try: python manage.py runserver 8001 (to use different port)
+- Make sure virtual environment is activated
+- Check that all dependencies are installed: pip install -r requirements.txt
+
+PROBLEM: Database errors
+------------------------
+SOLUTION:
+- Run migrations: python manage.py makemigrations && python manage.py migrate
+- If errors persist, delete db.sqlite3 and run migrations again
+
+PROBLEM: Images not showing for rewards
+---------------------------------------
+SOLUTION:
+- Make sure media folder exists: media/rewards/
+- Check file permissions
+- In production, configure proper media file serving
+
+================================================================================
+PART 5: QUICK TEST CHECKLIST
+================================================================================
+
+Use this checklist to verify everything works:
+
+[ ] .env file created with correct values
+[ ] Discord OAuth2 redirect URI added
+[ ] Dependencies installed
+[ ] Migrations run successfully
+[ ] Admin user created
+[ ] Server starts without errors
+[ ] Landing page loads
+[ ] Discord login redirects correctly
+[ ] User dashboard displays after login
+[ ] Admin panel accessible
+[ ] Can add rewards via admin
+[ ] Can modify user key balance
+[ ] Rewards appear on dashboard
+[ ] Can redeem rewards
+[ ] Key balance updates after redemption
+[ ] Redemption logs appear in admin
+[ ] Logout works
+[ ] Can login again after logout
+
+================================================================================
+PART 6: NEXT STEPS AFTER TESTING
+================================================================================
+
+Once all tests pass:
+
+1. Add more rewards via admin panel
+2. Test with different users (login with different Discord accounts)
+3. Test edge cases:
+   - Try to redeem with insufficient keys
+   - Try to redeem inactive rewards
+   - Test with very large key amounts
+4. Customize the design (if needed)
+5. Prepare for deployment:
+   - Set DEBUG=False in .env
+   - Update DISCORD_REDIRECT_URI to production URL
+   - Configure production database
+   - Set up proper static file serving
+
+================================================================================
+SUPPORT & NOTES
+================================================================================
+
+- All user data is stored in db.sqlite3 (SQLite database)
+- Admin panel is at: http://localhost:8000/admin
+- User dashboard is at: http://localhost:8000/dashboard
+- Landing page is at: http://localhost:8000
+
+If you encounter any issues not covered here, check:
+1. Terminal/console for error messages
+2. Browser console (F12) for JavaScript errors
+3. Django logs in the terminal where server is running
+
+Good luck with testing! 🚀

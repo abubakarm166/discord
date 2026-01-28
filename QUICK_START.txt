@@ -1,0 +1,151 @@
+================================================================================
+QUICK START GUIDE - Test Your Project Now
+================================================================================
+
+Your .env file is already configured with:
+- Application ID: 1464199776823279636
+- Client Secret: Already set!
+
+================================================================================
+STEP 1: Install Dependencies (if not done)
+================================================================================
+
+Open PowerShell or Command Prompt in the project folder and run:
+
+   pip install -r requirements.txt
+
+If you have a virtual environment (evn folder), activate it first:
+   .\evn\Scripts\Activate.ps1
+
+Then install:
+   pip install -r requirements.txt
+
+================================================================================
+STEP 2: Verify Setup
+================================================================================
+
+Run the verification script:
+   python verify_setup.py
+
+This will check if everything is configured correctly.
+
+================================================================================
+STEP 3: Setup Database
+================================================================================
+
+Run these commands:
+
+   python manage.py makemigrations
+   python manage.py migrate
+
+This creates the database tables.
+
+================================================================================
+STEP 4: Create Admin User
+================================================================================
+
+Run:
+   python manage.py createsuperuser
+
+Enter:
+   - Username: (choose any, e.g., "admin")
+   - Email: (optional, press Enter to skip)
+   - Password: (choose a password, remember it!)
+
+================================================================================
+STEP 5: Start the Server
+================================================================================
+
+Run:
+   python manage.py runserver
+
+You should see:
+   "Starting development server at http://127.0.0.1:8000/"
+
+Keep this window open!
+
+================================================================================
+STEP 6: Test the Application
+================================================================================
+
+1. Open your web browser
+2. Go to: http://localhost:8000
+3. Click "Login with Discord"
+4. Authorize the app
+5. You should see your dashboard!
+
+================================================================================
+STEP 7: Add Rewards (Admin Panel)
+================================================================================
+
+1. Open new tab: http://localhost:8000/admin
+2. Login with your admin username/password
+3. Click "Rewards" > "Add Reward"
+4. Fill in:
+   - Name: "Test Reward"
+   - Key cost: 10
+   - Is active: ✓
+5. Click "Save"
+
+================================================================================
+STEP 8: Add Keys to Your Account
+================================================================================
+
+1. In admin panel, click "Users"
+2. Find your Discord username
+3. Click on it
+4. Change "Key balance" to 50
+5. Click "Save"
+
+================================================================================
+STEP 9: Test Redemption
+================================================================================
+
+1. Go back to dashboard: http://localhost:8000/dashboard
+2. Refresh the page
+3. You should see your reward
+4. Click "Redeem"
+5. Success! Your keys should decrease
+
+================================================================================
+IMPORTANT: Discord OAuth Setup
+================================================================================
+
+Before testing login, make sure in Discord Developer Portal:
+
+1. Go to: https://discord.com/developers/applications
+2. Select "GamingApp"
+3. Click "OAuth2" in left sidebar
+4. Under "Redirects", make sure this is added:
+   http://localhost:8000/auth/discord/callback/
+5. Save changes
+
+If redirect URI is not added, login will fail!
+
+================================================================================
+TROUBLESHOOTING
+================================================================================
+
+Problem: "Module not found" errors
+Solution: Install dependencies: pip install -r requirements.txt
+
+Problem: "Discord OAuth not configured"
+Solution: Check .env file exists and has correct values
+
+Problem: "Invalid redirect URI" from Discord
+Solution: Add redirect URI in Discord Developer Portal > OAuth2
+
+Problem: Can't access admin
+Solution: Make sure you created superuser: python manage.py createsuperuser
+
+Problem: Port 8000 already in use
+Solution: Use different port: python manage.py runserver 8001
+
+================================================================================
+FOR DETAILED TESTING GUIDE
+================================================================================
+
+See TESTING_GUIDE.txt for complete step-by-step instructions with
+screenshots descriptions and detailed troubleshooting.
+
+================================================================================

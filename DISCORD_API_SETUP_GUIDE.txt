@@ -1,0 +1,91 @@
+================================================================================
+DISCORD API SETUP GUIDE - How to Get Discord OAuth Credentials
+================================================================================
+
+This guide will walk you through setting up a Discord Application and obtaining
+the Client ID and Client Secret needed for the KEYREWARDS platform.
+
+================================================================================
+STEP 1: Create a Discord Account (If You Don't Have One)
+================================================================================
+
+1. Go to https://discord.com
+2. Click "Register" or "Login" if you already have an account
+3. Complete the registration process
+4. Verify your email if required
+
+================================================================================
+STEP 2: Access Discord Developer Portal
+================================================================================
+
+1. Open your web browser
+2. Go to: https://discord.com/developers/applications
+3. Login with your Discord account credentials
+4. You should see the Discord Developer Portal dashboard
+
+================================================================================
+STEP 3: Create a New Application
+================================================================================
+
+1. In the Discord Developer Portal, click the "New Application" button
+   (located in the top right corner)
+2. A popup will appear asking for an application name
+3. Enter a name for your application (e.g., "KEYREWARDS" or "My Rewards Platform")
+4. Click "Create"
+5. You'll be taken to the "General Information" page for your new application
+
+================================================================================
+STEP 4: Get Your Application ID (Client ID)
+================================================================================
+
+1. On the "General Information" page, you'll see several fields
+2. Look for the "Application ID" section
+3. You'll see a long number (e.g., 1464199776823279636)
+4. Click the "Copy" button next to the Application ID
+5. Save this number - this is your DISCORD_CLIENT_ID
+6. ⚠️ NOTE: The "Public Key" shown below is NOT what you need
+
+================================================================================
+STEP 5: Get Your Client Secret
+================================================================================
+
+1. In the left sidebar, click on "OAuth2" (NOT "General Information")
+2. You'll see the OAuth2 settings page
+3. Look for the "Client Information" section at the top
+4. Find the "Client Secret" field
+5. If you see "Reset Secret" button:
+   - Click "Reset Secret"
+   - A warning will appear - click "Yes, do it!"
+   - Your Client Secret will be revealed (it's a long string of characters)
+6. If the Client Secret is already visible, just copy it
+7. ⚠️ IMPORTANT: Copy this secret immediately - you won't be able to see it again!
+8. Save this secret - this is your DISCORD_CLIENT_SECRET
+
+================================================================================
+STEP 6: Add Redirect URI
+================================================================================
+
+1. Still on the OAuth2 page, scroll down to the "Redirects" section
+2. Click "Add Redirect"
+3. Enter your redirect URI:
+   
+   For Local Development:
+   http://localhost:8000/auth/discord/callback/
+   
+   For Production (replace with your actual domain):
+   https://yourdomain.com/auth/discord/callback/
+   
+4. Click "Save Changes"
+5. ⚠️ IMPORTANT: The redirect URI must match EXACTLY (including trailing slash)
+
+================================================================================
+STEP 7: Configure OAuth Scopes
+================================================================================
+
+1. Still on the OAuth2 page, look for the "Scopes" section
+2. Check the box for "identify"
+   - This allows the app to get the user's Discord username and avatar
+   - This is the only scope needed for KEYREWARDS
+3. Make sure "identify" is checked
+4. You don't need any other scopes for this project
+

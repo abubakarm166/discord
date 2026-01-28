@@ -1,0 +1,51 @@
+QUICK SETUP GUIDE
+==================
+
+1. INSTALL DEPENDENCIES:
+   pip install -r requirements.txt
+
+2. CREATE .env FILE:
+   Create a .env file in the project root with:
+   
+   SECRET_KEY=zizz=4^a&h$t6%y88-)ii@=m+br#k#8so%i+6s@0vi^o93qa6e
+   DEBUG=True
+   DISCORD_CLIENT_ID=1464199776823279636
+   DISCORD_CLIENT_SECRET=YOUR_CLIENT_SECRET_HERE
+   DISCORD_REDIRECT_URI=http://localhost:8000/auth/discord/callback/
+
+3. DISCORD OAUTH SETUP (IMPORTANT):
+   - Your Application ID is already set: 1464199776823279636
+   - Go to Discord Developer Portal: https://discord.com/developers/applications
+   - Select "GamingApp" (or your app)
+   - Click "OAuth2" in the left sidebar (NOT "General Information")
+   - In the OAuth2 section, you'll find:
+     * Client Secret (click "Reset Secret" if needed, then copy it)
+     * Redirects section - ADD THIS: http://localhost:8000/auth/discord/callback/
+   - Copy the Client Secret and replace "YOUR_CLIENT_SECRET_HERE" in .env
+   - Required scope: identify (should be checked by default)
+   
+   ⚠️ NOTE: The Public Key is NOT the Client Secret. You need the Client Secret from the OAuth2 section.
+
+4. RUN MIGRATIONS:
+   python manage.py makemigrations
+   python manage.py migrate
+
+5. CREATE ADMIN USER:
+   python manage.py createsuperuser
+
+6. RUN SERVER:
+   python manage.py runserver
+
+7. ACCESS:
+   - Landing page: http://localhost:8000
+   - Admin panel: http://localhost:8000/admin
+
+8. ADD REWARDS:
+   - Login to admin panel
+   - Go to Rewards section
+   - Add rewards with name, image (optional), key cost, and active status
+
+9. ADD KEYS TO USERS:
+   - Login to admin panel
+   - Go to Users section
+   - Edit user and modify key_balance field
