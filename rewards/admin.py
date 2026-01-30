@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import User, Category, Reward, RedemptionLog
+from .models import User, Category, Reward, LeaderboardEntry, RedemptionLog
 
 
 @admin.register(Category)
@@ -36,6 +36,15 @@ class RewardAdmin(admin.ModelAdmin):
     search_fields = ['name']
     list_editable = ['is_active']
     list_select_related = ['category']
+
+
+@admin.register(LeaderboardEntry)
+class LeaderboardEntryAdmin(admin.ModelAdmin):
+    list_display = ['position', 'username', 'reward_won', 'date_won', 'is_active', 'order']
+    list_filter = ['is_active', 'date_won']
+    list_editable = ['is_active', 'order']
+    search_fields = ['username', 'reward_won']
+    ordering = ['order', 'position']
 
 
 @admin.register(RedemptionLog)

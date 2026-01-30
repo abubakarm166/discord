@@ -8,7 +8,7 @@
     <div class="container">
         <div class="d-flex justify-content-between align-items-center flex-wrap">
             <div class="d-flex align-items-center gap-2">
-                <a href="{% url 'dashboard' %}" class="logo"><span style="font-size: xx-large;">K</span>EY<span style="font-size: xx-large;">R</span>EWARDS</a>
+                <a href="{% url 'dashboard' %}" class="logo"><span style="font-size: xx-large;">C</span>ite</a>
                 <div class="key-badge">
                     <i class="bi bi-key-fill"></i>
                     <span id="key-balance">{{ user.key_balance }}</span> Keys
@@ -81,6 +81,9 @@
             </div>
         </div>
     </section>
+
+    <!-- Leaderboard Section -->
+    {% include 'rewards/partials/_leaderboard.html' %}
 
     <!-- Available Rewards Section -->
     <section>
@@ -155,7 +158,7 @@
 <footer class="container-fluid py-4 mt-5" style="border-top: 1px solid rgba(255, 255, 255, 0.1);">
     <div class="container">
         <div class="d-flex justify-content-between align-items-center flex-wrap">
-            <a href="{% url 'landing' %}" class="logo"><span style="font-size: xx-large;">K</span>EY<span style="font-size: xx-large;">R</span>EWARDS</a>
+            <a href="{% url 'landing' %}" class="logo"><span style="font-size: xx-large;">C</span>ite</a>
 
             <div class="d-flex gap-4 mt-2 mt-md-0">
                 <a href="#" class="text-decoration-none" style="color: var(--text-light);">Discord Server</a>

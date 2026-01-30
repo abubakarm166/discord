@@ -6,13 +6,14 @@ from django.db import transaction
 from django.conf import settings
 import requests
 import secrets
-from .models import User, Category, Reward, RedemptionLog
+from .models import User, Category, Reward, LeaderboardEntry, RedemptionLog
 from .utils import send_redemption_notification_to_admin
 
 
 def landing_page(request):
     """Landing page with Discord login"""
-    return render(request, 'rewards/landing.html')
+    leaderboard = LeaderboardEntry.objects.filter(is_active=True)[:10]
+    return render(request, 'rewards/landing.html', {'leaderboard': leaderboard})
 
 
 def discord_oauth_login(request):
@@ -173,12 +174,16 @@ def dashboard(request):
         .values_list('reward_id', flat=True)
     )
     
+    # Get leaderboard winners
+    leaderboard = LeaderboardEntry.objects.filter(is_active=True)[:10]
+    
     context = {
         'user': user,
         'categories': categories,
         'selected_category': selected_category,
         'rewards': rewards,
         'redeemed_reward_ids': redeemed_reward_ids,
+        'leaderboard': leaderboard,
     }
     
     return render(request, 'rewards/dashboard.html', context)

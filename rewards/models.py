@@ -55,6 +55,24 @@ class Reward(models.Model):
         return f"{self.name} ({self.key_cost} keys)"
 
 
+class LeaderboardEntry(models.Model):
+    """Leaderboard winners - added by admin"""
+    position = models.PositiveIntegerField(help_text='Rank/position (1=first, 2=second, etc.)')
+    username = models.CharField(max_length=100)
+    reward_won = models.CharField(max_length=200, blank=True, help_text='What they won (e.g. "Steam Key", "Discord Nitro")')
+    date_won = models.DateField(null=True, blank=True, help_text='When they won')
+    order = models.PositiveIntegerField(default=0, help_text='Display order (lower = higher on list)')
+    is_active = models.BooleanField(default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['order', 'position', '-created_at']
+        verbose_name_plural = 'Leaderboard entries'
+
+    def __str__(self):
+        return f"#{self.position} - {self.username}"
+
+
 class RedemptionLog(models.Model):
     """Log of reward redemptions"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='redemptions')

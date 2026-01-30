@@ -7,7 +7,7 @@
 <header class="container-fluid py-4">
     <div class="container">
         <div class="d-flex justify-content-between align-items-center">
-            <a href="{% url 'landing' %}" class="logo"><span style="font-size: xx-large;">K</span>EY<span style="font-size: xx-large;">R</span>EWARDS</a>
+            <a href="{% url 'landing' %}" class="logo"><span style="font-size: xx-large;">C</span>ite</a>
             <a href="{% url 'discord_login' %}" class="btn btn-orange">
                 <i class="bi bi-discord me-2"></i>
                 Login with Discord
@@ -108,11 +108,16 @@
     </div>
 </section>
 
+<!-- Leaderboard Section -->
+<section class="container py-5">
+    {% include 'rewards/partials/_leaderboard.html' %}
+</section>
+
 <!-- Footer -->
 <footer class="container-fluid py-4 mt-5" style="border-top: 1px solid rgba(255, 255, 255, 0.1);">
     <div class="container">
         <div class="d-flex justify-content-between align-items-center flex-wrap">
-            <a href="{% url 'landing' %}" class="logo"><span style="font-size: xx-large;">K</span>EY<span style="font-size: xx-large;">R</span>EWARDS</a>
+            <a href="{% url 'landing' %}" class="logo"><span style="font-size: xx-large;">C</span>iTe</a>
 
             <div class="d-flex gap-4 mt-2 mt-md-0">
                 <a href="#" class="text-decoration-none" style="color: var(--text-light);">Discord Server</a>
