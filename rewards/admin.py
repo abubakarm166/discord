@@ -1,5 +1,10 @@
 from django.contrib import admin
+from django.contrib.auth.models import Group
+
 from .models import User, Category, Reward, LeaderboardEntry, RedemptionLog
+
+# Hide Groups from admin (not needed for this app)
+admin.site.unregister(Group)
 
 
 @admin.register(Category)
