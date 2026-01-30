@@ -18,8 +18,30 @@ class User(models.Model):
         return f"{self.username} ({self.discord_id})"
 
 
+class Category(models.Model):
+    """Category for grouping rewards"""
+    name = models.CharField(max_length=100)
+    slug = models.SlugField(max_length=100, unique=True)
+    order = models.PositiveIntegerField(default=0, help_text='Display order (lower = first)')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['order', 'name']
+        verbose_name_plural = 'Categories'
+
+    def __str__(self):
+        return self.name
+
+
 class Reward(models.Model):
     """Reward model"""
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='rewards'
+    )
     name = models.CharField(max_length=200)
     image = models.ImageField(upload_to='rewards/', blank=True, null=True)
     key_cost = models.IntegerField()

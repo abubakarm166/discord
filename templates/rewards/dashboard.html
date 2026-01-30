@@ -85,7 +85,23 @@
     <!-- Available Rewards Section -->
     <section>
         <h2 class="fw-bold mb-2">Available Rewards</h2>
-        <p class=" mb-4">Redeem your keys for exclusive rewards</p>
+        <p class="mb-4">Redeem your keys for exclusive rewards</p>
+        
+        <!-- Category Filters -->
+        {% if categories %}
+        <div class="d-flex flex-wrap gap-2 mb-4">
+            <a href="{% url 'dashboard' %}" 
+               class="btn {% if not selected_category %}btn-orange{% else %}btn-outline-secondary{% endif %} rounded-pill px-3 py-2">
+                All
+            </a>
+            {% for cat in categories %}
+            <a href="{% url 'dashboard' %}?category={{ cat.id }}" 
+               class="btn {% if selected_category and selected_category.id == cat.id %}btn-orange{% else %}btn-outline-secondary{% endif %} rounded-pill px-3 py-2">
+                {{ cat.name }}
+            </a>
+            {% endfor %}
+        </div>
+        {% endif %}
         
         {% if rewards %}
             <div class="row g-4">
@@ -100,6 +116,9 @@
                                 </div>
                             {% endif %}
                             <div class="p-4">
+                                {% if reward.category %}
+                                <span class="badge mb-2" style="background-color: rgba(255, 138, 0, 0.2); color: var(--orange); font-size: 0.7rem;">{{ reward.category.name }}</span>
+                                {% endif %}
                                 <h5 class="fw-bold mb-2">{{ reward.name }}</h5>
                                 <p class=" mb-3">
                                     <i class="bi bi-key-fill me-1" style="color: var(--orange);"></i>

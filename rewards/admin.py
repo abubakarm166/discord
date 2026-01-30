@@ -1,5 +1,13 @@
 from django.contrib import admin
-from .models import User, Reward, RedemptionLog
+from .models import User, Category, Reward, RedemptionLog
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ['name', 'slug', 'order', 'created_at']
+    list_editable = ['order']
+    prepopulated_fields = {'slug': ('name',)}
+    search_fields = ['name']
 
 
 @admin.register(User)
@@ -23,10 +31,11 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Reward)
 class RewardAdmin(admin.ModelAdmin):
-    list_display = ['name', 'key_cost', 'is_active', 'created_at']
-    list_filter = ['is_active', 'created_at']
+    list_display = ['name', 'category', 'key_cost', 'is_active', 'created_at']
+    list_filter = ['category', 'is_active', 'created_at']
     search_fields = ['name']
     list_editable = ['is_active']
+    list_select_related = ['category']
 
 
 @admin.register(RedemptionLog)

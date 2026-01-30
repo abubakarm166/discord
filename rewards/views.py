@@ -6,7 +6,8 @@ from django.db import transaction
 from django.conf import settings
 import requests
 import secrets
-from .models import User, Reward, RedemptionLog
+from .models import User, Category, Reward, RedemptionLog
+from .utils import send_redemption_notification_to_admin
 
 
 def landing_page(request):
@@ -145,8 +146,26 @@ def dashboard(request):
         request.session.flush()
         return redirect('landing')
     
-    # Get active rewards
-    rewards = Reward.objects.filter(is_active=True)
+    # Get categories that have active rewards
+    categories = Category.objects.filter(
+        rewards__is_active=True
+    ).distinct().order_by('order', 'name')
+    
+    # Get active rewards (optionally filter by category)
+    rewards = Reward.objects.filter(is_active=True).select_related('category')
+    
+    category_filter = request.GET.get('category')
+    selected_category = None
+    if category_filter:
+        try:
+            # Support filter by id or slug
+            if category_filter.isdigit():
+                selected_category = Category.objects.get(id=category_filter)
+            else:
+                selected_category = Category.objects.get(slug=category_filter)
+            rewards = rewards.filter(category=selected_category)
+        except Category.DoesNotExist:
+            pass
     
     # Get list of reward IDs that user has already redeemed
     redeemed_reward_ids = set(
@@ -156,6 +175,8 @@ def dashboard(request):
     
     context = {
         'user': user,
+        'categories': categories,
+        'selected_category': selected_category,
         'rewards': rewards,
         'redeemed_reward_ids': redeemed_reward_ids,
     }
@@ -212,6 +233,9 @@ def redeem_reward(request, reward_id):
                 user=user,
                 reward=reward
             )
+        
+        # Send email notification to admin
+        send_redemption_notification_to_admin(user=user, reward=reward)
         
         return JsonResponse({
             'success': True,
